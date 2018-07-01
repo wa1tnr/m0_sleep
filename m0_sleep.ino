@@ -1,17 +1,31 @@
-// Sun  1 Jul 23:46:06 UTC 2018
+// Sun  1 Jul 23:52:08 UTC 2018
 
 // + single-shot message
 // + branch trapping/reset
 
 // Feather M0 Express - sleep
 
+#define LED 13      // internal red LED
+
 // volatile boolean wake_EVENT = false;
 volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
 
-void pins_setup(void) { }
+
+void pins_setup(void) {
+    pinMode(LED, OUTPUT);
+}
+
+void blinkon(void) {
+    digitalWrite(LED, 1);
+}
+
+void blinkoff(void) {
+    digitalWrite(LED, 0);
+}
 
 void setup(void) {
     pins_setup();
+    blinkon();
     while(!Serial) {
     }
     Serial.begin(19200);
@@ -44,3 +58,4 @@ void loop(void) {
 // volatile boolean wake_EVENT = true;
 //     saw: branched to ! - everybody -- while
  
+
