@@ -1,4 +1,4 @@
-// Sun  1 Jul 23:52:08 UTC 2018
+// Sun  1 Jul 23:55:32 UTC 2018
 
 // + single-shot message
 // + branch trapping/reset
@@ -23,10 +23,15 @@ void blinkoff(void) {
     digitalWrite(LED, 0);
 }
 
+void pip(void) {
+    blinkon();  delay(5);
+    blinkoff(); delay(1800);
+}
+
 void setup(void) {
     pins_setup();
-    blinkon();
     while(!Serial) {
+        pip();  // blinkon(); flicker D13 LED
     }
     Serial.begin(19200);
 }
