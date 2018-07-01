@@ -1,25 +1,40 @@
-// Sun  1 Jul 23:15:08 UTC 2018
+// Sun  1 Jul 23:29:54 UTC 2018
+
+// + branch trapping/reset
 
 // Feather M0 Express - sleep
 
 // volatile boolean wake_EVENT = false;
 volatile boolean wake_EVENT = true;
 
+void pins_setup(void) { }
+
 void setup(void) {
-    while(!Serial) { }
+    pins_setup();
+    while(!Serial) {
+    }
     Serial.begin(19200);
-    delay(1100);
 }
+
+void sleep_now(void) {}
 
 void loop(void) {
     while (!wake_EVENT) { // nothing awakening -- wants to be sleep
+        sleep_now();
         Serial.println("!wake_EVENT\r\n");
         delay(400);
     }
     if (wake_EVENT) {  // Human presses PB switch
-        Serial.println("wake_EVENT\r\n");
-        delay(400);
+        wake_EVENT = false; // reset
+        if(wake_EVENT) {
+            Serial.println("branched to wake_EVENT\r\n");
+        } else {
+            Serial.println("branched to !wake_EVENT\r\n");
+        }
+        delay(2400);
     }
     Serial.println("Everybody - awake or asleep, reaches here.");
 }
+ 
+
  
