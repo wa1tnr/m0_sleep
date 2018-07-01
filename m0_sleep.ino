@@ -1,11 +1,12 @@
-// Sun  1 Jul 23:40:29 UTC 2018
+// Sun  1 Jul 23:46:06 UTC 2018
 
+// + single-shot message
 // + branch trapping/reset
 
 // Feather M0 Express - sleep
 
-// volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
-volatile boolean wake_EVENT = false;
+// volatile boolean wake_EVENT = false;
+volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
 
 void pins_setup(void) { }
 
@@ -33,7 +34,8 @@ void loop(void) {
         }
         delay(2400);
     }
-    Serial.println("Everybody - awake or asleep, reaches here.");
+    Serial.println("Everybody - awake or asleep, reaches here, but not until escaping the while loop.");
+    Serial.println("Single-shot -- only see this once per reset.");
 }
  
 // volatile boolean wake_EVENT = false;
