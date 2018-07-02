@@ -1,4 +1,4 @@
-// Sun  1 Jul 23:55:32 UTC 2018
+// Sun  1 Jul 23:12:43 UTC 2018
 
 // + single-shot message
 // + branch trapping/reset
@@ -30,7 +30,21 @@ void pip(void) {
     blinkoff(); delay(1800);
 }
 
-void wake_EVENT_payload(void) { }
+void pips(void) {
+    blinkon();  delay(5);
+    blinkoff(); delay(800);
+}
+
+void sleep_blink(void) {
+    pips(); pips(); pips(); pips(); pips();
+}
+
+void wake_EVENT_payload(void) {
+    // demo: blink the red LED
+    for (int i=17; i>-1; i--) {
+        pip();
+    }
+}
 
 void setup(void) {
     pins_setup();
@@ -40,7 +54,9 @@ void setup(void) {
     Serial.begin(19200);
 }
 
-void sleep_now(void) {}
+void sleep_now(void) {
+    sleep_blink(); // non-existing
+}
 
 void loop(void) {
     while (!wake_EVENT) { // nothing awakening -- wants to be sleep
