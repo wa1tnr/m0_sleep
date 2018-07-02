@@ -7,8 +7,10 @@
 
 #define LED 13      // internal red LED
 
-// volatile boolean wake_EVENT = false;
-volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
+// System will try to go to sleep if it sees no wake_EVENT
+volatile boolean wake_EVENT = false;
+
+// volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
 
 
 void pins_setup(void) {
@@ -28,6 +30,8 @@ void pip(void) {
     blinkoff(); delay(1800);
 }
 
+void wake_EVENT_payload(void) { }
+
 void setup(void) {
     pins_setup();
     while(!Serial) {
@@ -46,11 +50,12 @@ void loop(void) {
     }
     if (wake_EVENT) {  // Human presses PB switch
         wake_EVENT = false; // reset
-        if(wake_EVENT) {
-            Serial.println("branched to wake_EVENT\r\n");
-        } else {
-            Serial.println("branched to !wake_EVENT\r\n");
-        }
+        wake_EVENT_payload();
+        // if(wake_EVENT) {
+            // Serial.println("branched to wake_EVENT\r\n");
+        // } else {
+            // Serial.println("branched to !wake_EVENT\r\n");
+        // }
         delay(2400);
     }
     Serial.println("Everybody - awake or asleep, reaches here, but not until escaping the while loop.");
@@ -63,4 +68,3 @@ void loop(void) {
 // volatile boolean wake_EVENT = true;
 //     saw: branched to ! - everybody -- while
  
-
