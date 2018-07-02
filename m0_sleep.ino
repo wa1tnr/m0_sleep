@@ -1,4 +1,4 @@
-// Sun  1 Jul 03:00:47 UTC 2018
+// Sun  1 Jul 04:27:46 UTC 2018
 
 // reverse logic - temporary.
 // NICE semaphores in blinkie.  Helps to differentiate!
@@ -14,6 +14,14 @@
 // volatile boolean wake_EVENT = false;
 volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
 
+void PB_Switch_Handler(void) {  // Interrupt Service Routine (ISR) (isr)
+    wake_EVENT = true;          // flag: human requests a wake EVENT
+}
+
+void setup_pbSwitch(void) {
+    attachInterrupt(digitalPinToInterrupt(WAKE_LINE), PB_Switch_Handler, LOW);
+}
+
 void sleep_setup(void) {
     Serial.print("\r\nsleep_setup(); is executing..");
     Serial.println("\r\nsleep_setup(); is done executing.\r\n");
@@ -21,7 +29,7 @@ void sleep_setup(void) {
 
 void pins_setup(void) {
     pinMode(LED, OUTPUT);
-    pinMode(WAKE_LINE, INPUT_PULLUP); }
+    pinMode(WAKE_LINE, INPUT_PULLUP);
     digitalWrite(WAKE_LINE, HIGH);
 }
 
@@ -65,6 +73,7 @@ void setup(void) {
         pip();  // blinkon(); flicker D13 LED
     }
     Serial.begin(19200);
+    setup_pbSwitch();
     sleep_setup();
 }
 
