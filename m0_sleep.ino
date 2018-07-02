@@ -1,4 +1,4 @@
-// Sun  1 Jul 02:52:59 UTC 2018
+// Sun  1 Jul 03:00:47 UTC 2018
 
 // reverse logic - temporary.
 // NICE semaphores in blinkie.  Helps to differentiate!
@@ -8,6 +8,7 @@
 // Feather M0 Express - sleep
 
 #define LED 13      // internal red LED
+#define WAKE_LINE 6 // PB switch on D6
 
 // System will try to go to sleep if it sees no wake_EVENT
 // volatile boolean wake_EVENT = false;
@@ -20,6 +21,8 @@ void sleep_setup(void) {
 
 void pins_setup(void) {
     pinMode(LED, OUTPUT);
+    pinMode(WAKE_LINE, INPUT_PULLUP); }
+    digitalWrite(WAKE_LINE, HIGH);
 }
 
 void blinkon(void) {
@@ -159,4 +162,4 @@ void loop(void) {
 
 // volatile boolean wake_EVENT = true;
 //     saw: branched to ! - everybody -- while
-
+ 
