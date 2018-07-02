@@ -1,4 +1,4 @@
-// Sun  1 Jul 02:47:53 UTC 2018
+// Sun  1 Jul 02:52:59 UTC 2018
 
 // reverse logic - temporary.
 // NICE semaphores in blinkie.  Helps to differentiate!
@@ -88,7 +88,7 @@ void loop(void) {
     Serial.println("Everybody - awake or asleep, reaches here, but not until escaping the while loop.");
     Serial.println("Single-shot -- only see this once per reset.");
 }
- 
+
 /*
  * ARM Cortex™-M Programming Guide to Memory Barrier Instructions
  * 
@@ -122,6 +122,37 @@ void loop(void) {
  * immediately after the access completes.
  * DSB is not strictly required after SCS accesses. // RESOLVE
  */
+
+/*
+ $ cat -n system.h | head -248 | tail -16
+   233  //  
+   234   * \brief Device sleep modes.
+   235   *
+   236   * List of available sleep modes in the device. A table of clocks available in
+   237   * different sleep modes can be found in \ref asfdoc_sam0_system_module_overview_sleep_mode.
+   238   //  
+   239  enum system_sleepmode {
+   240          //  IDLE 0 sleep mode. //
+   241          SYSTEM_SLEEPMODE_IDLE_0,
+   242          //  IDLE 1 sleep mode. //
+   243          SYSTEM_SLEEPMODE_IDLE_1,
+   244          //  IDLE 2 sleep mode. //
+   245          SYSTEM_SLEEPMODE_IDLE_2,
+   246          //  Standby sleep mode. //
+   247          SYSTEM_SLEEPMODE_STANDBY,
+   248  };
+*/
+
+/*
+ $ cat -n system.h | head -382 | tail -7
+   376          switch (sleep_mode) {
+   377                  case SYSTEM_SLEEPMODE_IDLE_0:
+   378                  case SYSTEM_SLEEPMODE_IDLE_1:
+   379                  case SYSTEM_SLEEPMODE_IDLE_2:   // enumerated only in system.h
+   380                          SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+   381                          PM->SLEEP.reg = sleep_mode;
+   382                          break;
+*/
 
 // volatile boolean wake_EVENT = false;
 //     saw: while (!wake_EVENT) {} loop -- ONLY
