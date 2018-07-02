@@ -1,4 +1,4 @@
-// Sun  1 Jul 23:12:43 UTC 2018
+// Sun  1 Jul 02:27:09 UTC 2018
 
 // reverse logic - temporary.
 // NICE semaphores in blinkie.  Helps to differentiate!
@@ -12,6 +12,11 @@
 // System will try to go to sleep if it sees no wake_EVENT
 // volatile boolean wake_EVENT = false;
 volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
+
+void sleep_setup(void) {
+    Serial.print("\r\nsleep_setup(); is executing..");
+    Serial.println("\r\nsleep_setup(); is done executing.\r\n");
+}
 
 void pins_setup(void) {
     pinMode(LED, OUTPUT);
@@ -57,6 +62,7 @@ void setup(void) {
         pip();  // blinkon(); flicker D13 LED
     }
     Serial.begin(19200);
+    sleep_setup();
 }
 
 void sleep_now(void) {
@@ -83,9 +89,31 @@ void loop(void) {
     Serial.println("Single-shot -- only see this once per reset.");
 }
  
+/*
+ * ARM Cortex™-M Programming Guide to Memory Barrier Instructions
+ * 
+ * Application Note 321
+ */
+
+/* http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dai0321a/BIHBGGHF.html
+ *
+ * Example 1. Ensuring the effect of an SCS register-write is visible immediately
+ *     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk; // Enable deepsleep //
+ *     __DSB(); // Ensure effect of last store takes effect //
+ *     __WFI(); // Enter sleep mode //
+ * 
+ *     Or
+ * 
+ *     void Device_IRQHandler(void) {
+ *         software_flag = 1;   // Update software variable used in thread //
+ *         SCB->SCR &= ~SCB_SCR_SLEEPONEXIT_Msk;   // Disable sleeponexit //
+ *         __DSB();   // Ensure effect of last store takes effect //
+ *         return;    // Exception return //}
+ */
+ 
 // volatile boolean wake_EVENT = false;
 //     saw: while (!wake_EVENT) {} loop -- ONLY
 
 // volatile boolean wake_EVENT = true;
 //     saw: branched to ! - everybody -- while
- 
+
