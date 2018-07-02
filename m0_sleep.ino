@@ -1,4 +1,4 @@
-// Mon  2 Jul 21:41:23 UTC 2018
+// Mon  2 Jul 22:48:15 UTC 2018
 
 // Feather M0 Express - sleep
 
@@ -18,6 +18,7 @@ void PB_Switch_Handler(void) {  // Interrupt Service Routine (ISR) (isr)
 }
 
 void setup_pbSwitch(void) {
+    interrupts();
     attachInterrupt(digitalPinToInterrupt(WAKE_LINE), PB_Switch_Handler, LOW);
     // LOW may be required, and this may in turn require the use of
     // a pullup on the WAKE_LINE (GPIO port pin, D6).
@@ -29,13 +30,16 @@ void setup_pbSwitch(void) {
 
 void sleep_setup(void) {
     Serial.print("\r\nsleep_setup(); is executing..");
+    setup_pbSwitch();
+    SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk; // system.h#L380
+    PM->SLEEP.reg |= PM_SLEEP_IDLE_APB;
     Serial.println("\r\nsleep_setup(); is done executing.\r\n");
 }
 
 void pins_setup(void) {
     pinMode(LED, OUTPUT);
     pinMode(WAKE_LINE, INPUT_PULLUP);
-    digitalWrite(WAKE_LINE, HIGH);
+    // digitalWrite(WAKE_LINE, HIGH);
 }
 
 void blinkon(void) {
@@ -73,17 +77,29 @@ void wake_EVENT_payload(void) {
     }
 }
 
+#undef NO_SERIAL_WANTED
+#define NO_SERIAL_WANTED
+
+
+
 void setup(void) {
-    pins_setup();
-    while(!Serial) {
-        pip();  // blinkon(); flicker D13 LED
-    }
     Serial.begin(19200);
+    pins_setup();
+#ifdef NO_SERIAL_WANTED
+    // while(!Serial) { pip();  // blinkon(); flicker D13 LED
+    // }
+#endif
     setup_pbSwitch();
     sleep_setup();
 }
 
+#undef DSB_USED
+
 void sleep_now(void) {
+#ifdef DSB_USED
+    __DSB(); // Data synchronization barrier
+#endif
+    __WFI(); // wait for interrupt
 }
 
 void debounce(void) {
@@ -94,8 +110,7 @@ void debounce(void) {
 
 void loop(void) {
     while (!wake_EVENT) { // nothing awakening -- wants to be sleep
-        sleep_now();
-        delay(50);
+        sleep_now(); // ONLY place to sleep
     }
     if (wake_EVENT) {  // Human presses PB switch
         debounce();
