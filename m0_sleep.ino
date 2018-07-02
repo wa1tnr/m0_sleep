@@ -1,6 +1,10 @@
-// Mon  2 Jul 22:48:15 UTC 2018
+// Mon  2 Jul 23:30:24 UTC 2018
 
 // Feather M0 Express - sleep
+
+// basically works - sleeps.  first_PASS keeps it viable for uploads.
+// pb Switch allows you to put it to sleep the first time,
+// and wake it up after it's been sleeping a while.
 
 // +debounce  has correct debounce for type of switch used
 
@@ -10,10 +14,12 @@
 // System will try to go to sleep if it sees no wake_EVENT
 // volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
 volatile boolean wake_EVENT = false;
+volatile boolean first_PASS = true;
 
 void PB_Switch_Handler(void) {  // Interrupt Service Routine (ISR) (isr)
     noInterrupts();
     wake_EVENT = true;          // flag: human requests a wake EVENT
+    first_PASS = false;         // don't like doing this here. kludge.  fix.
     interrupts();
 }
 
@@ -77,20 +83,25 @@ void wake_EVENT_payload(void) {
     }
 }
 
-#undef NO_SERIAL_WANTED
-#define NO_SERIAL_WANTED
+/*
+void sys_reset(void) {
+    NVIC_SystemReset();
+}
+*/
 
-
+#define SERIAL_WANTED
+#undef SERIAL_WANTED
 
 void setup(void) {
     Serial.begin(19200);
-    pins_setup();
-#ifdef NO_SERIAL_WANTED
-    // while(!Serial) { pip();  // blinkon(); flicker D13 LED
-    // }
+    delay(3000); // three second delay
+    Serial.println("Hello.  signed on.");
+    pins_setup(); sleep_setup();
+#ifdef SERIAL_WANTED
+    while(!Serial) {
+        pip();  // blinkon(); flicker D13 LED
+    }
 #endif
-    setup_pbSwitch();
-    sleep_setup();
 }
 
 #undef DSB_USED
@@ -109,6 +120,11 @@ void debounce(void) {
 }
 
 void loop(void) {
+
+    while (first_PASS) {
+        pip();
+    }
+
     while (!wake_EVENT) { // nothing awakening -- wants to be sleep
         sleep_now(); // ONLY place to sleep
     }
