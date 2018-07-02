@@ -1,5 +1,7 @@
 // Sun  1 Jul 23:12:43 UTC 2018
 
+// reverse logic - temporary.
+// NICE semaphores in blinkie.  Helps to differentiate!
 // + single-shot message
 // + branch trapping/reset
 
@@ -8,10 +10,8 @@
 #define LED 13      // internal red LED
 
 // System will try to go to sleep if it sees no wake_EVENT
-volatile boolean wake_EVENT = false;
-
-// volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
-
+// volatile boolean wake_EVENT = false;
+volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
 
 void pins_setup(void) {
     pinMode(LED, OUTPUT);
@@ -27,12 +27,17 @@ void blinkoff(void) {
 
 void pip(void) {
     blinkon();  delay(5);
-    blinkoff(); delay(1800);
+    blinkoff(); delay(2400);
 }
 
 void pips(void) {
     blinkon();  delay(5);
     blinkoff(); delay(800);
+}
+
+void pipf(void) {
+    blinkon();  delay(5);
+    blinkoff(); delay(400);
 }
 
 void sleep_blink(void) {
@@ -42,7 +47,7 @@ void sleep_blink(void) {
 void wake_EVENT_payload(void) {
     // demo: blink the red LED
     for (int i=17; i>-1; i--) {
-        pip();
+        pipf();
     }
 }
 
