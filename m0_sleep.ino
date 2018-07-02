@@ -1,4 +1,4 @@
-// Mon  2 Jul 19:49:48 UTC 2018
+// Mon  2 Jul 21:41:23 UTC 2018
 
 // Feather M0 Express - sleep
 
@@ -19,6 +19,12 @@ void PB_Switch_Handler(void) {  // Interrupt Service Routine (ISR) (isr)
 
 void setup_pbSwitch(void) {
     attachInterrupt(digitalPinToInterrupt(WAKE_LINE), PB_Switch_Handler, LOW);
+    // LOW may be required, and this may in turn require the use of
+    // a pullup on the WAKE_LINE (GPIO port pin, D6).
+
+    // That would mean that the buttons on CPX cannot be used,
+    // as they are already wired to complete the circuit to Vcc
+    // (instead of ground, as is done, here).
 }
 
 void sleep_setup(void) {
@@ -88,23 +94,14 @@ void debounce(void) {
 
 void loop(void) {
     while (!wake_EVENT) { // nothing awakening -- wants to be sleep
-        // Serial.println("while (!wake_EVENT) {} loop\r\n");
         sleep_now();
-        // delay(3400);
         delay(50);
     }
     if (wake_EVENT) {  // Human presses PB switch
         debounce();
         wake_EVENT = false; // reset
         wake_EVENT_payload();
-        // if(wake_EVENT) {
-            // Serial.println("branched to wake_EVENT\r\n");
-        // } else {
-            // Serial.println("branched to !wake_EVENT\r\n");
-        // }
-        // delay(2400); LEFT OFF HERE - how much delay is needed?
     }
-    // Serial.println("Everybody - awake or asleep, reaches here, but not until escaping the while loop.");
     Serial.println("Single-shot -- only see this once per reset.\r\n\r\n");
 }
 
