@@ -11,8 +11,8 @@
 #define WAKE_LINE 6 // PB switch on D6
 
 // System will try to go to sleep if it sees no wake_EVENT
-// volatile boolean wake_EVENT = false;
-volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
+// volatile boolean wake_EVENT = true; // TESTING - want 'false' here ordinarily.
+volatile boolean wake_EVENT = false;
 
 void PB_Switch_Handler(void) {  // Interrupt Service Routine (ISR) (isr)
     wake_EVENT = true;          // flag: human requests a wake EVENT
@@ -62,6 +62,7 @@ void sleep_blink(void) {
 
 void wake_EVENT_payload(void) {
     // demo: blink the red LED
+    Serial.println("HIT the payload.");
     for (int i=17; i>-1; i--) {
         pipf();
     }
@@ -83,9 +84,10 @@ void sleep_now(void) {
 
 void loop(void) {
     while (!wake_EVENT) { // nothing awakening -- wants to be sleep
-        Serial.println("while (!wake_EVENT) {} loop\r\n");
-        sleep_now();
-        delay(3400);
+        // Serial.println("while (!wake_EVENT) {} loop\r\n");
+        // sleep_now();
+        // delay(3400);
+        delay(50);
     }
     if (wake_EVENT) {  // Human presses PB switch
         wake_EVENT = false; // reset
