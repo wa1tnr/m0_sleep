@@ -1,10 +1,4 @@
-// Sun  1 Jul 04:46:40 UTC 2018
-
-// FINAL for the night - works okay for pb switch registration.
-// reverse logic - temporary.
-// NICE semaphores in blinkie.  Helps to differentiate!
-// + single-shot message
-// + branch trapping/reset
+// Mon  2 Jul 17:26:19 UTC 2018
 
 // Feather M0 Express - sleep
 
@@ -45,8 +39,8 @@ void blinkoff(void) {
 }
 
 void pip(void) {
-    blinkon();  delay(5);
-    blinkoff(); delay(2400);
+    blinkon();  delay(25);
+    blinkoff(); delay(3400);
 }
 
 void pips(void) {
@@ -55,8 +49,8 @@ void pips(void) {
 }
 
 void pipf(void) {
-    blinkon();  delay(5);
-    blinkoff(); delay(400);
+    blinkon();  delay(15);
+    blinkoff(); delay(320);
 }
 
 void sleep_blink(void) {
@@ -82,17 +76,23 @@ void setup(void) {
 }
 
 void sleep_now(void) {
-    sleep_blink(); // non-existing
+}
+
+void debounce(void) {
+    noInterrupts(); // disable interrupts
+    delayMicroseconds(2200);
+    interrupts();
 }
 
 void loop(void) {
     while (!wake_EVENT) { // nothing awakening -- wants to be sleep
         // Serial.println("while (!wake_EVENT) {} loop\r\n");
-        // sleep_now();
+        sleep_now();
         // delay(3400);
         delay(50);
     }
     if (wake_EVENT) {  // Human presses PB switch
+        debounce();
         wake_EVENT = false; // reset
         wake_EVENT_payload();
         // if(wake_EVENT) {
