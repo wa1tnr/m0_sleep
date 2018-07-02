@@ -1,4 +1,4 @@
-// Sun  1 Jul 02:27:09 UTC 2018
+// Sun  1 Jul 02:47:53 UTC 2018
 
 // reverse logic - temporary.
 // NICE semaphores in blinkie.  Helps to differentiate!
@@ -97,7 +97,12 @@ void loop(void) {
 
 /* http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dai0321a/BIHBGGHF.html
  *
+ * if the software requires that the next operation must not
+ * be carried out until the effect of the access has taken
+ * place, a DSB instruction must be used as shown in Example 1.
+ * 
  * Example 1. Ensuring the effect of an SCS register-write is visible immediately
+ * 
  *     SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk; // Enable deepsleep //
  *     __DSB(); // Ensure effect of last store takes effect //
  *     __WFI(); // Enter sleep mode //
@@ -111,6 +116,13 @@ void loop(void) {
  *         return;    // Exception return //}
  */
  
+/* http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dai0321a/BIHBGGHF.html
+ * 
+ * In Cortex-M0, M0+ processors, the effect takes place
+ * immediately after the access completes.
+ * DSB is not strictly required after SCS accesses. // RESOLVE
+ */
+
 // volatile boolean wake_EVENT = false;
 //     saw: while (!wake_EVENT) {} loop -- ONLY
 
