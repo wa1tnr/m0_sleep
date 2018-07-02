@@ -19,6 +19,12 @@ void PB_Switch_Handler(void) {  // Interrupt Service Routine (ISR) (isr)
 
 void setup_pbSwitch(void) {
     attachInterrupt(digitalPinToInterrupt(WAKE_LINE), PB_Switch_Handler, LOW);
+    // LOW may be required, and this may in turn require the use of
+    // a pullup on the WAKE_LINE (GPIO port pin, D6).
+
+    // That would mean that the buttons on CPX cannot be used,
+    // as they are already wired to complete the circuit to Vcc
+    // (instead of ground, as is done, here).
 }
 
 void sleep_setup(void) {
