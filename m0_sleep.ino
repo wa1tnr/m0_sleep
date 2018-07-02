@@ -1,5 +1,6 @@
-// Sun  1 Jul 04:27:46 UTC 2018
+// Sun  1 Jul 04:46:40 UTC 2018
 
+// FINAL for the night - works okay for pb switch registration.
 // reverse logic - temporary.
 // NICE semaphores in blinkie.  Helps to differentiate!
 // + single-shot message
@@ -15,7 +16,9 @@
 volatile boolean wake_EVENT = false;
 
 void PB_Switch_Handler(void) {  // Interrupt Service Routine (ISR) (isr)
+    noInterrupts();
     wake_EVENT = true;          // flag: human requests a wake EVENT
+    interrupts();
 }
 
 void setup_pbSwitch(void) {
@@ -62,7 +65,7 @@ void sleep_blink(void) {
 
 void wake_EVENT_payload(void) {
     // demo: blink the red LED
-    Serial.println("HIT the payload.");
+    Serial.println("\r\n\r\nHIT the payload.");
     for (int i=17; i>-1; i--) {
         pipf();
     }
