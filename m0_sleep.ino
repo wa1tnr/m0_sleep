@@ -1,6 +1,8 @@
-// Mon  2 Jul 17:26:19 UTC 2018
+// Mon  2 Jul 19:49:48 UTC 2018
 
 // Feather M0 Express - sleep
+
+// +debounce  has correct debounce for type of switch used
 
 #define LED 13      // internal red LED
 #define WAKE_LINE 6 // PB switch on D6
@@ -59,7 +61,7 @@ void sleep_blink(void) {
 
 void wake_EVENT_payload(void) {
     // demo: blink the red LED
-    Serial.println("\r\n\r\nHIT the payload.");
+    Serial.println("\r\n\r\n\r\nHIT the payload.");
     for (int i=17; i>-1; i--) {
         pipf();
     }
@@ -80,7 +82,7 @@ void sleep_now(void) {
 
 void debounce(void) {
     noInterrupts(); // disable interrupts
-    delayMicroseconds(2200);
+    delayMicroseconds(2900);
     interrupts();
 }
 
@@ -100,10 +102,10 @@ void loop(void) {
         // } else {
             // Serial.println("branched to !wake_EVENT\r\n");
         // }
-        delay(2400);
+        // delay(2400); LEFT OFF HERE - how much delay is needed?
     }
-    Serial.println("Everybody - awake or asleep, reaches here, but not until escaping the while loop.");
-    Serial.println("Single-shot -- only see this once per reset.");
+    // Serial.println("Everybody - awake or asleep, reaches here, but not until escaping the while loop.");
+    Serial.println("Single-shot -- only see this once per reset.\r\n\r\n");
 }
 
 /*
