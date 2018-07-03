@@ -1,5 +1,5 @@
 Tue  3 Jul 11:10:07 UTC 2018
 
-Untested changes.  Likely work, as-is, correctly.
+Untested changes.  Likely to work, as-is, correctly.
 
 (define 'work' -- haha)
