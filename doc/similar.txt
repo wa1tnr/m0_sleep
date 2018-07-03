@@ -1,0 +1,7 @@
+Tue  3 Jul 09:25:58 UTC 2018
+
+https://docs.mbed.com/docs/mbed-os-api/en/latest/api/group__CMSIS__SCB.html
+
+MBED has the same symbol, 
+
+   ~SCB_SCR_SLEEPDEEP_Msk
