@@ -1,4 +1,4 @@
-// Mon  3 Jul 13:40:57 UTC 2018
+// Mon  3 Jul 14:04:40 UTC 2018
 
 // Feather M0 Express - sleep
 
@@ -70,10 +70,6 @@ void pipf(void) {
     blinkoff(); delay(320);
 }
 
-void sleep_blink(void) {
-    pips(); pips(); pips(); pips(); pips();
-}
-
 void wake_EVENT_payload(void) {
     // demo: blink the red LED
     Serial.println("\r\n\r\n\r\nHIT the payload.");
@@ -96,11 +92,22 @@ void setup(void) {
     delay(3000); // three second delay
     Serial.println("Hello.  signed on.");
     pins_setup(); sleep_setup();
+
+// future of this block is uncertain, now that the
+// other pip (heartbeat) mechanism works well:
 #ifdef SERIAL_WANTED
     while(!Serial) {
         pip();  // blinkon(); flicker D13 LED
     }
 #endif
+
+    if (!wake_EVENT && first_PASS) {
+        first_PASS = false;   // trap is sprung, once per cold (or warm) boot.
+        while (!wake_EVENT) { // so long as there's been no buttonpress
+            pip();            // flash D13
+        }
+    }
+
 }
 
 #undef DSB_USED
@@ -119,12 +126,6 @@ void debounce(void) {
 }
 
 void loop(void) {
-    if (!wake_EVENT && first_PASS) {
-        first_PASS = false;   // trap is sprung, once per cold (or warm) boot.
-        while (!wake_EVENT) { // so long as there's been no buttonpress
-            pip();            // flash D13
-        }
-    }
 
     while (!wake_EVENT) { // nothing awakening -- wants to be sleep
         sleep_now(); // ONLY place to sleep
