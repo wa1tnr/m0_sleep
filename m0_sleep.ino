@@ -1,4 +1,4 @@
-// Mon  2 Jul 23:30:24 UTC 2018
+// Mon  3 Jul 10:35:17 UTC 2018
 
 // Feather M0 Express - sleep
 
@@ -201,9 +201,3 @@ void loop(void) {
    382                          break;
 */
 
-// volatile boolean wake_EVENT = false;
-//     saw: while (!wake_EVENT) {} loop -- ONLY
-
-// volatile boolean wake_EVENT = true;
-//     saw: branched to ! - everybody -- while
- 
