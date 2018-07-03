@@ -21,6 +21,12 @@ void PB_Switch_Handler(void) {  // Interrupt Service Routine (ISR) (isr)
     wake_EVENT = true;          // flag: human requests a wake EVENT
     first_PASS = false;         // don't like doing this here. kludge.  fix.
     interrupts();
+
+    // Q: where is a better location to reset first_PASS?
+    // 
+    //    first_PASS is only there to allow easy update of
+    //    the firmware (by preventing sleep mode from being
+    //    entered even one time).
 }
 
 void setup_pbSwitch(void) {
