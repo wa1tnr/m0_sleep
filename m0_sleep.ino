@@ -1,4 +1,4 @@
-// Mon  2 Jul 23:30:24 UTC 2018
+// Mon  3 Jul 10:35:17 UTC 2018
 
 // Feather M0 Express - sleep
 
@@ -21,6 +21,12 @@ void PB_Switch_Handler(void) {  // Interrupt Service Routine (ISR) (isr)
     wake_EVENT = true;          // flag: human requests a wake EVENT
     first_PASS = false;         // don't like doing this here. kludge.  fix.
     interrupts();
+
+    // Q: where is a better location to reset first_PASS?
+    // 
+    //    first_PASS is only there to allow easy update of
+    //    the firmware (by preventing sleep mode from being
+    //    entered even one time).
 }
 
 void setup_pbSwitch(void) {
@@ -201,9 +207,3 @@ void loop(void) {
    382                          break;
 */
 
-// volatile boolean wake_EVENT = false;
-//     saw: while (!wake_EVENT) {} loop -- ONLY
-
-// volatile boolean wake_EVENT = true;
-//     saw: branched to ! - everybody -- while
- 
