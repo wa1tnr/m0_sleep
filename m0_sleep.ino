@@ -1,4 +1,4 @@
-// Mon  3 Jul 10:35:17 UTC 2018
+// Mon  3 Jul 13:33:33 UTC 2018
 
 // Feather M0 Express - sleep
 
@@ -19,7 +19,7 @@ volatile boolean first_PASS = true;
 void PB_Switch_Handler(void) {  // Interrupt Service Routine (ISR) (isr)
     noInterrupts();
     wake_EVENT = true;          // flag: human requests a wake EVENT
-    first_PASS = false;         // don't like doing this here. kludge.  fix.
+    // first_PASS = false;         // don't like doing this here. kludge.  fix.
     interrupts();
 
     // Q: where is a better location to reset first_PASS?
@@ -127,9 +127,17 @@ void debounce(void) {
 
 void loop(void) {
 
-    while (first_PASS) {
-        pip();
+    // at program start:
+    //     boolean wake_EVENT = false; boolean first_PASS = true;
+
+    if (!wake_EVENT && first_PASS) {
+        first_PASS = false; // trap is sprung, once per cold (or warm) boot.
+        while (!wake_EVENT) { // so long as there's been no buttonpress
+            pip(); // flash D13
+        }
     }
+
+    // while (first_PASS) { pip(); }
 
     while (!wake_EVENT) { // nothing awakening -- wants to be sleep
         sleep_now(); // ONLY place to sleep
